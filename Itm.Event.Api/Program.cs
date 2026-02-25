@@ -1,41 +1,82 @@
+using Itm.Event.Api.Dtos;
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(); // Me permite genera la documentación de la API con Swagger/OpenAPI
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger(); // Habilita el middleware de Swagger para generar la documentación en tiempo de ejecución
+    app.UseSwaggerUI(); // Habilita la interfaz de usuario de Swagger para visualizar la documentación
 }
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection(); // Redirige las solicitudes HTTP a HTTPS
 
-var summaries = new[]
+// Aquí simulamos la base de datos para los eventos
+var events = new List<EventItemDto>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    new EventItemDto(1, "Concierto ITM", 50000, 100)
 };
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/api/events/{id}", (int id) =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    var e = events.FirstOrDefault(e => e.EventId == id);
+    return e is not null ? Results.Ok(e) : Results.NotFound();
 })
-.WithName("GetWeatherForecast");
+.WithName("GetEventInfo")
+.WithOpenApi();
+
+app.MapPost("/api/events/reserve", (TicketRequestDto request) =>
+{
+    if (request.EventId <= 0 || request.Quantity <= 0)
+    {
+        return Results.BadRequest("EventId y Quantity deben ser mayores a 0");
+    }
+
+    var e = events.FirstOrDefault(e => e.EventId == request.EventId);
+    
+    if (e is null)
+    {
+        return Results.BadRequest($"No se encontró el evento con id{request.EventId}");
+    }
+
+    if (e.AvailableSeats < request.Quantity)
+    {
+        return Results.BadRequest("No hay suficientes sillas");
+    }
+
+    e.AvailableSeats = e.AvailableSeats - request.Quantity;
+
+    return Results.Ok(new { Message = "Reserva exitosa" });
+
+})
+.WithName("SetReserve")
+.WithOpenApi();
+
+app.MapPost("/api/events/release", (TicketRequestDto request) =>
+{
+    if (request.EventId <= 0 || request.Quantity <= 0)
+    {
+        return Results.BadRequest("EventId y Quantity deben ser mayores a 0");
+    }
+
+    var e = events.FirstOrDefault(e => e.EventId == request.EventId);
+
+    if (e is null)
+    {
+        return Results.BadRequest($"No se encontró el evento con id{request.EventId}");
+    }
+
+    e.AvailableSeats = e.AvailableSeats + request.Quantity;
+
+    return Results.Ok(new { Message = "Liberación de sillas exitosa" });
+
+})
+.WithName("EventRelease")
+.WithOpenApi();
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+record TicketRequestDto(int EventId, int Quantity);
