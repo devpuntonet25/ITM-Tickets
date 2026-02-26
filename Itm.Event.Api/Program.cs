@@ -23,7 +23,7 @@ var events = new List<EventItemDto>
 app.MapGet("/api/events/{id}", (int id) =>
 {
     var e = events.FirstOrDefault(e => e.EventId == id);
-    return e is not null ? Results.Ok(e) : Results.NotFound();
+    return e is not null ? Results.Ok(e) : Results.NotFound(new { Error = $"No se encontró el evento con id {id}" });
 })
 .WithName("GetEventInfo")
 .WithOpenApi();
@@ -32,24 +32,24 @@ app.MapPost("/api/events/reserve", (TicketRequestDto request) =>
 {
     if (request.EventId <= 0 || request.Quantity <= 0)
     {
-        return Results.BadRequest("EventId y Quantity deben ser mayores a 0");
+        return Results.BadRequest(new { Error = "EventId y Quantity deben ser mayores a 0" });
     }
 
     var e = events.FirstOrDefault(e => e.EventId == request.EventId);
     
     if (e is null)
     {
-        return Results.BadRequest($"No se encontró el evento con id{request.EventId}");
+        return Results.BadRequest(new { Error = $"No se encontró el evento con id {request.EventId}" });
     }
 
     if (e.AvailableSeats < request.Quantity)
     {
-        return Results.BadRequest("No hay suficientes sillas");
+        return Results.BadRequest(new { Error = "No hay suficientes sillas" });
     }
 
     e.AvailableSeats = e.AvailableSeats - request.Quantity;
 
-    return Results.Ok(new { Message = "Reserva exitosa" });
+    return Results.Ok(e);
 
 })
 .WithName("SetReserve")
@@ -59,19 +59,19 @@ app.MapPost("/api/events/release", (TicketRequestDto request) =>
 {
     if (request.EventId <= 0 || request.Quantity <= 0)
     {
-        return Results.BadRequest("EventId y Quantity deben ser mayores a 0");
+        return Results.BadRequest(new { Error = "EventId y Quantity deben ser mayores a 0" });
     }
 
     var e = events.FirstOrDefault(e => e.EventId == request.EventId);
 
     if (e is null)
     {
-        return Results.BadRequest($"No se encontró el evento con id{request.EventId}");
+        return Results.BadRequest(new { Error = $"No se encontró el evento con id {request.EventId}" });
     }
 
     e.AvailableSeats = e.AvailableSeats + request.Quantity;
 
-    return Results.Ok(new { Message = "Liberación de sillas exitosa" });
+    return Results.Ok(e);
 
 })
 .WithName("EventRelease")

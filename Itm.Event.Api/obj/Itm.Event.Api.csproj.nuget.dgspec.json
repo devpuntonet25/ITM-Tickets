@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Administrador\\Desktop\\estudio\\U 2026 - 1\\Programacion_Distribuida\\Itm.Tickets.System\\Itm.Event.Api\\Itm.Event.Api.csproj": {}
+    "C:\\Users\\Administrador\\Desktop\\Estudio\\U 2026 - 1\\Programacion_Distribuida\\Itm.Tickets.System\\Itm.Event.Api\\Itm.Event.Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Administrador\\Desktop\\estudio\\U 2026 - 1\\Programacion_Distribuida\\Itm.Tickets.System\\Itm.Event.Api\\Itm.Event.Api.csproj": {
+    "C:\\Users\\Administrador\\Desktop\\Estudio\\U 2026 - 1\\Programacion_Distribuida\\Itm.Tickets.System\\Itm.Event.Api\\Itm.Event.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Administrador\\Desktop\\estudio\\U 2026 - 1\\Programacion_Distribuida\\Itm.Tickets.System\\Itm.Event.Api\\Itm.Event.Api.csproj",
+        "projectUniqueName": "C:\\Users\\Administrador\\Desktop\\Estudio\\U 2026 - 1\\Programacion_Distribuida\\Itm.Tickets.System\\Itm.Event.Api\\Itm.Event.Api.csproj",
         "projectName": "Itm.Event.Api",
-        "projectPath": "C:\\Users\\Administrador\\Desktop\\estudio\\U 2026 - 1\\Programacion_Distribuida\\Itm.Tickets.System\\Itm.Event.Api\\Itm.Event.Api.csproj",
+        "projectPath": "C:\\Users\\Administrador\\Desktop\\Estudio\\U 2026 - 1\\Programacion_Distribuida\\Itm.Tickets.System\\Itm.Event.Api\\Itm.Event.Api.csproj",
         "packagesPath": "C:\\Users\\Administrador\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Administrador\\Desktop\\estudio\\U 2026 - 1\\Programacion_Distribuida\\Itm.Tickets.System\\Itm.Event.Api\\obj\\",
+        "outputPath": "C:\\Users\\Administrador\\Desktop\\Estudio\\U 2026 - 1\\Programacion_Distribuida\\Itm.Tickets.System\\Itm.Event.Api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

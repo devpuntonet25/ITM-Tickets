@@ -16,14 +16,18 @@ app.UseHttpsRedirection();
 
 var discounts = new List<DiscountItemDto>
 {
-    new DiscountItemDto("ITM50", 0.5m)
+    new DiscountItemDto("ITM50", 5m)
 };
 
 app.MapGet("/api/discounts/{code}", (string code) =>
 {
     var discountItem = discounts.FirstOrDefault(d => d.Code == code);
 
-    return discountItem is null ? Results.NotFound($"El código {code} no existe") : Results.Ok(new { DiscountItem = discountItem, Message = "Se ha encontrado el código de descuento" });
+    if (discountItem is null)
+    {
+        return Results.NotFound(new { Error = $"El código {code} no existe" });
+    }
+    return Results.Ok(discountItem);
 })
 .WithName("GetDiscountByCode")
 .WithOpenApi();
